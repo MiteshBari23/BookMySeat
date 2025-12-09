@@ -43,10 +43,13 @@ public class Ticket {
     @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
+    //Validation
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
     private List<TicketValidation> validations = new ArrayList<>();
 
-    //TODO QR CODE
+    //QRCODE
+    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
+    private List<QrCode> qrCodes = new ArrayList<>();
 
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
