@@ -1,8 +1,7 @@
 package com.BookMySeat.tickets.filters;
 
-import com.BookMySeat.tickets.domain.User;
+import com.BookMySeat.tickets.domain.entities.User;
 import com.BookMySeat.tickets.repository.UserRepository;
-import com.nimbusds.jose.proc.SecurityContext;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

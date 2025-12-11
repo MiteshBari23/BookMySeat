@@ -1,4 +1,4 @@
-package com.BookMySeat.tickets.domain;
+package com.BookMySeat.tickets.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;

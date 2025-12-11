@@ -1,6 +1,6 @@
 package com.BookMySeat.tickets.repository;
 
-import com.BookMySeat.tickets.domain.User;
+import com.BookMySeat.tickets.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

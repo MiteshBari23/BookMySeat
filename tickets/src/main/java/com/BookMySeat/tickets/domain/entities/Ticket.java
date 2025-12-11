@@ -1,10 +1,7 @@
-package com.BookMySeat.tickets.domain;
+package com.BookMySeat.tickets.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.catalina.LifecycleState;
-import org.hibernate.annotations.AnyDiscriminatorImplicitValues;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
