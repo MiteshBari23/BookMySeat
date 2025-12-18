@@ -1,5 +1,5 @@
 services:
-  #Out POSTGRESQL DB
+  #Our POSTGRESQL DB
   db:
     #Using latest image
     image: postgres:latest
@@ -7,7 +7,9 @@ services:
       - "5432:5432"
     restart: always
     environment:
-      POSTGRES_PASSWORD: plschangeme!
+      POSTGRES_PASSWORD: watermelon@2305
+      TZ: UTC
+      PGTZ: UTC
 
   #DB management interface
   adminer:
