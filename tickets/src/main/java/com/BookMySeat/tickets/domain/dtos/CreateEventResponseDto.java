@@ -24,4 +24,5 @@ public class CreateEventResponseDto {
     private List<CreateTicketTypeResponseDto> ticketType;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
 }
