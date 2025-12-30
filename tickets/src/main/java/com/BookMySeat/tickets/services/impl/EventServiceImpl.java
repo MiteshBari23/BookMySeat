@@ -1,19 +1,21 @@
 package com.BookMySeat.tickets.services.impl;
 
 import com.BookMySeat.tickets.domain.CreateEventRequest;
+import com.BookMySeat.tickets.domain.dtos.EventSummaryDto;
 import com.BookMySeat.tickets.domain.entities.Event;
-import com.BookMySeat.tickets.domain.entities.Ticket;
 import com.BookMySeat.tickets.domain.entities.TicketType;
 import com.BookMySeat.tickets.domain.entities.User;
 import com.BookMySeat.tickets.exceptions.UserNotFoundException;
+import com.BookMySeat.tickets.mappers.EventMapper;
 import com.BookMySeat.tickets.repository.EventRepository;
 import com.BookMySeat.tickets.repository.UserRepository;
 import com.BookMySeat.tickets.services.EventService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,6 +24,7 @@ public class EventServiceImpl implements EventService {
 
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
+    private final EventMapper eventMapper;
 
     @Override
     public Event createEvent(UUID organizerId, CreateEventRequest event) {
@@ -53,5 +56,11 @@ public class EventServiceImpl implements EventService {
         eventToCreate.setTicketTypes(ticketTypesToCreate);
 
         return eventRepository.save(eventToCreate);
+    }
+    @Override
+    public Page<EventSummaryDto> listEvents(UUID userId, Pageable pageable) {
+        return eventRepository
+                .findByOrganizer_Id(userId, pageable)
+                .map(eventMapper::toSummaryDto);
     }
 }

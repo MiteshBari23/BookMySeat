@@ -9,7 +9,6 @@ services:
     environment:
       POSTGRES_PASSWORD: watermelon@2305
       TZ: UTC
-      PGTZ: UTC
 
   #DB management interface
   adminer:
@@ -30,7 +29,7 @@ services:
       - keycloak-data:/opt/keycloak/data
     command:
       - start-dev
-      - --db=dev-file
+     # - --db=dev-file
 
 volumes:
   keycloak-data:

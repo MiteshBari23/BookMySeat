@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateEventResponseDto {
+public class EventSummaryDto {
     private UUID id;
     private String name;
     private LocalDateTime start;
