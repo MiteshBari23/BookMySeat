@@ -4,7 +4,6 @@ import com.BookMySeat.tickets.domain.CreateEventRequest;
 import com.BookMySeat.tickets.domain.dtos.CreateEventRequestDto;
 import com.BookMySeat.tickets.domain.dtos.CreateEventResponseDto;
 import com.BookMySeat.tickets.domain.dtos.ListEventResponseDto;
-import com.BookMySeat.tickets.domain.dtos.ListEventTicketTypeResponseDto;
 import com.BookMySeat.tickets.domain.entities.Event;
 import com.BookMySeat.tickets.mappers.EventMapper;
 import com.BookMySeat.tickets.services.EventService;
@@ -46,7 +45,7 @@ public class EventController {
             @AuthenticationPrincipal Jwt jwt, Pageable pageable
     ) {
         UUID userId = parseUserId(jwt);
-        Page<Event> events = eventService.listEventsForOragnizer(userId, pageable);
+        Page<Event> events = eventService.listEventsForOrganizer(userId, pageable);
         return ResponseEntity.ok(
                 events.map(
                         eventMapper::toListEventResponseDto
