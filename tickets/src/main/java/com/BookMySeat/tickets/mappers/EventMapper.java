@@ -2,11 +2,9 @@ package com.BookMySeat.tickets.mappers;
 
 import com.BookMySeat.tickets.domain.CreateEventRequest;
 import com.BookMySeat.tickets.domain.CreateTicketTypeRequest;
-import com.BookMySeat.tickets.domain.dtos.CreateEventRequestDto;
-import com.BookMySeat.tickets.domain.dtos.CreateEventResponseDto;
-import com.BookMySeat.tickets.domain.dtos.CreateTicketTypeRequestDto;
-import com.BookMySeat.tickets.domain.dtos.EventSummaryDto;
+import com.BookMySeat.tickets.domain.dtos.*;
 import com.BookMySeat.tickets.domain.entities.Event;
+import com.BookMySeat.tickets.domain.entities.TicketType;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
@@ -19,5 +17,7 @@ public interface EventMapper {
 
     CreateEventResponseDto toDto(Event event);
 
-    EventSummaryDto toSummaryDto(Event event);
+    ListEventTicketTypeResponseDto toDto(TicketType ticketType);
+
+    ListEventResponseDto toListEventResponseDto(Event event);
 }

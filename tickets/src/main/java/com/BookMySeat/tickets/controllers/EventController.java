@@ -3,7 +3,8 @@ package com.BookMySeat.tickets.controllers;
 import com.BookMySeat.tickets.domain.CreateEventRequest;
 import com.BookMySeat.tickets.domain.dtos.CreateEventRequestDto;
 import com.BookMySeat.tickets.domain.dtos.CreateEventResponseDto;
-import com.BookMySeat.tickets.domain.dtos.EventSummaryDto;
+import com.BookMySeat.tickets.domain.dtos.ListEventResponseDto;
+import com.BookMySeat.tickets.domain.dtos.ListEventTicketTypeResponseDto;
 import com.BookMySeat.tickets.domain.entities.Event;
 import com.BookMySeat.tickets.mappers.EventMapper;
 import com.BookMySeat.tickets.services.EventService;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,10 +31,10 @@ public class EventController {
 
     @PostMapping
     public ResponseEntity<@NotNull CreateEventResponseDto> createEvent(
-            @org.jetbrains.annotations.NotNull @AuthenticationPrincipal Jwt jwt,
-            @Valid @RequestBody CreateEventRequestDto createEventRequestDto){
+            @AuthenticationPrincipal Jwt jwt,
+            @Valid @RequestBody CreateEventRequestDto createEventRequestDto) {
         CreateEventRequest createEventRequest = eventMapper.fromDto(createEventRequestDto);
-        UUID userId = UUID.fromString(jwt.getSubject());
+        UUID userId = parseUserId(jwt);
 
         Event createdEvent = eventService.createEvent(userId, createEventRequest);
         CreateEventResponseDto createEventResponseDto = eventMapper.toDto(createdEvent);
@@ -42,12 +42,20 @@ public class EventController {
     }
 
     @GetMapping
-    public Page<EventSummaryDto> listEvents(
-            @AuthenticationPrincipal Jwt jwt,
-            @PageableDefault(size = 10)Pageable pageable
-            ){
-        UUID userId = UUID.fromString(jwt.getSubject());
-        return eventService.listEvents(userId, pageable);
+    public ResponseEntity<Page<ListEventResponseDto>> listEvents(
+            @AuthenticationPrincipal Jwt jwt, Pageable pageable
+    ) {
+        UUID userId = parseUserId(jwt);
+        Page<Event> events = eventService.listEventsForOragnizer(userId, pageable);
+        return ResponseEntity.ok(
+                events.map(
+                        eventMapper::toListEventResponseDto
+                )
+        );
+    }
+
+    private UUID parseUserId(Jwt jwt) {
+        return UUID.fromString(jwt.getSubject());
     }
 }
 

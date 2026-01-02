@@ -1,7 +1,6 @@
 package com.BookMySeat.tickets.services.impl;
 
 import com.BookMySeat.tickets.domain.CreateEventRequest;
-import com.BookMySeat.tickets.domain.dtos.EventSummaryDto;
 import com.BookMySeat.tickets.domain.entities.Event;
 import com.BookMySeat.tickets.domain.entities.TicketType;
 import com.BookMySeat.tickets.domain.entities.User;
@@ -28,23 +27,19 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event createEvent(UUID organizerId, CreateEventRequest event) {
-        User organizer = userRepository.findById(organizerId)
-                .orElseThrow(() -> new UserNotFoundException(
-                                String.format("User with ID '%s' not found", organizerId)
-                        )
-                );
-
-        List<TicketType> ticketTypesToCreate = event.getTicketTypes().stream().map(
-                ticketType -> {
-                    TicketType ticketTypeToCreate = new TicketType();
-                    ticketTypeToCreate.setName(ticketType.getName());
-                    ticketTypeToCreate.setPrice(ticketType.getPrice());
-                    ticketTypeToCreate.setDescription(ticketType.getDescription());
-                    ticketTypeToCreate.setTotalAvailable(ticketType.getTotalAvailable());
-                    return ticketTypeToCreate;
-                }).toList();
-
+        User organizer = userRepository.findById(organizerId).orElseThrow(() -> new UserNotFoundException(String.format("User with ID '%s' not found", organizerId)));
         Event eventToCreate = new Event();
+
+        List<TicketType> ticketTypesToCreate = event.getTicketTypes().stream().map(ticketType -> {
+            TicketType ticketTypeToCreate = new TicketType();
+            ticketTypeToCreate.setName(ticketType.getName());
+            ticketTypeToCreate.setPrice(ticketType.getPrice());
+            ticketTypeToCreate.setDescription(ticketType.getDescription());
+            ticketTypeToCreate.setTotalAvailable(ticketType.getTotalAvailable());
+            ticketTypeToCreate.setEvent(eventToCreate);
+            return ticketTypeToCreate;
+        }).toList();
+
         eventToCreate.setName(event.getName());
         eventToCreate.setStart(event.getStart());
         eventToCreate.setEnd(event.getEnd());
@@ -57,10 +52,9 @@ public class EventServiceImpl implements EventService {
 
         return eventRepository.save(eventToCreate);
     }
+
     @Override
-    public Page<EventSummaryDto> listEvents(UUID userId, Pageable pageable) {
-        return eventRepository
-                .findByOrganizer_Id(userId, pageable)
-                .map(eventMapper::toSummaryDto);
+    public Page<Event> listEventsForOragnizer(UUID userId, Pageable pageable) {
+        return  eventRepository.findByOrganizerId(userId, pageable);
     }
 }
