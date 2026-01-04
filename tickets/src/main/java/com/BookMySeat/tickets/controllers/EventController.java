@@ -1,9 +1,8 @@
 package com.BookMySeat.tickets.controllers;
 
 import com.BookMySeat.tickets.domain.CreateEventRequest;
-import com.BookMySeat.tickets.domain.dtos.CreateEventRequestDto;
-import com.BookMySeat.tickets.domain.dtos.CreateEventResponseDto;
-import com.BookMySeat.tickets.domain.dtos.ListEventResponseDto;
+import com.BookMySeat.tickets.domain.UpdateEventRequest;
+import com.BookMySeat.tickets.domain.dtos.*;
 import com.BookMySeat.tickets.domain.entities.Event;
 import com.BookMySeat.tickets.mappers.EventMapper;
 import com.BookMySeat.tickets.services.EventService;
@@ -40,6 +39,18 @@ public class EventController {
         return new ResponseEntity<>(createEventResponseDto, HttpStatus.CREATED);
     }
 
+    @PutMapping(path = "/{eventId}")
+    public ResponseEntity<@NotNull UpdateEventResponseDto> updateEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId,
+            @Valid @RequestBody UpdateEventRequestDto updateEventRequestDto) {
+        UpdateEventRequest updateEventRequest = eventMapper.fromDto(updateEventRequestDto);
+        UUID userId = parseUserId(jwt);
+        Event updatedEvent = eventService.updateEventForOrganizer(userId, eventId, updateEventRequest);
+        UpdateEventResponseDto updateEventResponseDto = eventMapper.toUpdateEventResponseDto(updatedEvent);
+        return ResponseEntity.ok(updateEventResponseDto);
+    }
+
     @GetMapping
     public ResponseEntity<Page<ListEventResponseDto>> listEvents(
             @AuthenticationPrincipal Jwt jwt, Pageable pageable
@@ -51,6 +62,18 @@ public class EventController {
                         eventMapper::toListEventResponseDto
                 )
         );
+    }
+
+    @GetMapping(path = "/{eventId}")
+    public ResponseEntity<GetEventDetailsResponseDto> getEvent(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID eventId
+    ) {
+        UUID userId = parseUserId(jwt);
+        return  eventService.getEventForOrganizer(userId, eventId)
+                .map(eventMapper::toGetEventDetailsResponseDto)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     private UUID parseUserId(Jwt jwt) {
