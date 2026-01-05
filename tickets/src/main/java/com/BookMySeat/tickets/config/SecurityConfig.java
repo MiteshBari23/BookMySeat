@@ -4,6 +4,7 @@ import com.BookMySeat.tickets.filters.UserProvisioningFilter;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,8 +20,11 @@ public class SecurityConfig {
             UserProvisioningFilter userProvisioningFilter) throws Exception {
         http
                 .authorizeHttpRequests(authorize ->
-                        // catch all rule
-                                authorize.anyRequest().authenticated())
+
+                                authorize
+                                        .requestMatchers(HttpMethod.GET, "/api/v1/published-events").permitAll()
+                                        // catch all rule
+                                        .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

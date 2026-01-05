@@ -4,6 +4,7 @@ import com.BookMySeat.tickets.domain.CreateEventRequest;
 import com.BookMySeat.tickets.domain.UpdateEventRequest;
 import com.BookMySeat.tickets.domain.UpdateTicketTypeRequest;
 import com.BookMySeat.tickets.domain.entities.Event;
+import com.BookMySeat.tickets.domain.entities.EventStatusEnum;
 import com.BookMySeat.tickets.domain.entities.TicketType;
 import com.BookMySeat.tickets.domain.entities.User;
 import com.BookMySeat.tickets.exceptions.EventNotFoundException;
@@ -146,5 +147,10 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public void deleteEventForOrqanizer(UUID organizerId, UUID id) {
         getEventForOrganizer(organizerId, id).ifPresent(eventRepository::delete);
+    }
+
+    @Override
+    public Page<Event> listPublishedEvent(Pageable pageable) {
+        return eventRepository.findByStatus(EventStatusEnum.PUBLISHED, pageable);
     }
 }
