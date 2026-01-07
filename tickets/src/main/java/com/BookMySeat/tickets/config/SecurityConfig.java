@@ -22,7 +22,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize ->
 
                                 authorize
-                                        .requestMatchers(HttpMethod.GET, "/api/v1/published-events").permitAll()
+                                        .requestMatchers(HttpMethod.GET, "/api/v1/published-events/**").permitAll()
                                         // catch all rule
                                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())

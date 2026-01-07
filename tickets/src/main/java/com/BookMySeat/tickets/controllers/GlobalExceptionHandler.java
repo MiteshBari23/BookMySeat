@@ -1,10 +1,7 @@
 package com.BookMySeat.tickets.controllers;
 
 import com.BookMySeat.tickets.domain.dtos.ErrorDto;
-import com.BookMySeat.tickets.exceptions.EventNotFoundException;
-import com.BookMySeat.tickets.exceptions.EventUpdateException;
-import com.BookMySeat.tickets.exceptions.TicketTypeNotFoundException;
-import com.BookMySeat.tickets.exceptions.UserNotFoundException;
+import com.BookMySeat.tickets.exceptions.*;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +19,15 @@ import java.util.List;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+
+    @ExceptionHandler(QrCodeGenerationException.class)
+    public ResponseEntity<ErrorDto> handleQrCodeGenerationException(QrCodeGenerationException ex) {
+        log.error("Caught QrCodeGenerationException", ex);
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setError("Unable to generate QR code");
+        return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     @ExceptionHandler(EventNotFoundException.class)
     public ResponseEntity<ErrorDto> handleEventNotFoundException(EventNotFoundException ex) {
