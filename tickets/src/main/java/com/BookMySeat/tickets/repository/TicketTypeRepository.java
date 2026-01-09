@@ -13,9 +13,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface TicketTypeRepository extends JpaRepository<Ticket, UUID> {
+public interface TicketTypeRepository extends JpaRepository<TicketType, UUID> {
 
-    @Query("SELECT tt FROM TicketType WHERE tt.id = :id")
+    @Query("SELECT tt FROM TicketType tt WHERE tt.id = :id")
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<TicketType> findByIdWithLock(@Param("id") UUID id);
 }
