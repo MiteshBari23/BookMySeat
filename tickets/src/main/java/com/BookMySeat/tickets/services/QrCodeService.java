@@ -8,6 +8,6 @@ import java.io.IOException;
 
 public interface QrCodeService {
 
-    QrCode generaterQrCode(Ticket ticket) throws WriterException, IOException;
+    QrCode generateQrCode(Ticket ticket) throws WriterException, IOException;
 
 }

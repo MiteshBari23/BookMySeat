@@ -33,7 +33,7 @@ public class QrCodeServiceImpl implements QrCodeService {
     private final QrCodeRepository qrCodeRepository;
 
     @Override
-    public QrCode generaterQrCode(Ticket ticket) {
+    public QrCode generateQrCode(Ticket ticket) {
         try {
         UUID uniqueID = UUID.randomUUID();
         String qrCodeImage =   generaterQrCodeImage(uniqueID);
