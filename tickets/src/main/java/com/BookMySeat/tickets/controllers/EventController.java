@@ -27,6 +27,7 @@ public class EventController {
     private final EventMapper eventMapper;
     private final EventService eventService;
 
+    //Create Event
     @PostMapping
     public ResponseEntity<@NotNull CreateEventResponseDto> createEvent(
             @AuthenticationPrincipal Jwt jwt,
@@ -39,6 +40,7 @@ public class EventController {
         return new ResponseEntity<>(createEventResponseDto, HttpStatus.CREATED);
     }
 
+    //Update Events
     @PutMapping(path = "/{eventId}")
     public ResponseEntity<@NotNull UpdateEventResponseDto> updateEvent(
             @AuthenticationPrincipal Jwt jwt,
@@ -51,6 +53,7 @@ public class EventController {
         return ResponseEntity.ok(updateEventResponseDto);
     }
 
+    //List events
     @GetMapping
     public ResponseEntity<Page<ListEventResponseDto>> listEvents(
             @AuthenticationPrincipal Jwt jwt, Pageable pageable
@@ -76,6 +79,7 @@ public class EventController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    //DELETE MAPPING
     @DeleteMapping(path = "/{eventId}")
     public ResponseEntity<Void> deleteEvent(
             @AuthenticationPrincipal Jwt jwt,
