@@ -4,6 +4,7 @@ import com.BookMySeat.tickets.domain.entities.QrCode;
 import com.BookMySeat.tickets.domain.entities.QrCodeStatusEnum;
 import com.BookMySeat.tickets.domain.entities.Ticket;
 import com.BookMySeat.tickets.exceptions.QrCodeGenerationException;
+import com.BookMySeat.tickets.exceptions.QrCodeNotfoundException;
 import com.BookMySeat.tickets.repository.QrCodeRepository;
 import com.BookMySeat.tickets.services.QrCodeService;
 import com.google.zxing.BarcodeFormat;
@@ -13,6 +14,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,7 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class QrCodeServiceImpl implements QrCodeService {
@@ -50,6 +53,18 @@ public class QrCodeServiceImpl implements QrCodeService {
             throw new QrCodeGenerationException("Failed to generate QR code", e);
         }
 
+    }
+
+    @Override
+    public byte[] getQrCodeImageForUserAndTicket(UUID userId, UUID ticketId) {
+        QrCode qrCode = qrCodeRepository.findByTicketIdAndTicketPurchaserId(ticketId, userId)
+                .orElseThrow(QrCodeNotfoundException::new);
+        try{
+            return Base64.getDecoder().decode(qrCode.getValue());
+        }catch (IllegalArgumentException ex){
+            log.error("Invalid Base64 Qr code for ticked ID: {}",ticketId, ex);
+            throw new QrCodeNotfoundException();
+        }
     }
 
     private String generaterQrCodeImage(UUID uniqueID) throws WriterException, IOException {
