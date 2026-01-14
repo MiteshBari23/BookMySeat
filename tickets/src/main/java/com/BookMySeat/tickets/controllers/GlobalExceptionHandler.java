@@ -26,6 +26,13 @@ public class GlobalExceptionHandler {
         errorDto.setError("Unable to find QR code");
         return new ResponseEntity<>(errorDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    @ExceptionHandler(TicketNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleTicketNotFoundException(TicketNotFoundException ex) {
+        log.error("Caught TicketNotFoundException", ex);
+        ErrorDto errorDto = new ErrorDto();
+        errorDto.setError("Unable to find Ticket");
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(TicketSoldOutException.class)
     public ResponseEntity<ErrorDto> handleTicketSoldOutException(TicketSoldOutException ex) {
